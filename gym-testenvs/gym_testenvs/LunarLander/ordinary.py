@@ -660,8 +660,9 @@ class LunarLander_ordinary(gym.Env, EzPickle):
         reward -= s_power * 0.03
 
         terminated = False
+        truncated = False
         if self.game_over or abs(state[0]) >= 1.0:
-            terminated = True
+            truncated = True
             reward = -100
         if not self.lander.awake:
             terminated = True
@@ -669,7 +670,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
 
         if self.render_mode == "human":
             self.render()
-        return np.array(state, dtype=np.float32), reward, terminated, False, {}
+        return np.array(state, dtype=np.float32), reward, terminated, truncated, {}
 
     def render(self):
         if self.render_mode is None:
