@@ -1,6 +1,6 @@
 import gymnasium as gym
 import gym_testenvs
-import pic
+import testing.data_process as data_process
 
 from stable_baselines3 import DQN,PPO
 from stable_baselines3.common.evaluation import evaluate_policy
@@ -13,7 +13,7 @@ model = DQN.load("../Rocket_agent_withwind/model/dqn_lunar.pkl")
 
 episode_rewards, episode_lengths = evaluate_policy(model, env, n_eval_episodes=n,return_episode_rewards = True,render=False)
 
-mean,rhw,var=pic.calculate(episode_rewards)
+mean,rhw,var=data_process.calculate(episode_rewards)
 
 print(mean)
 print(rhw)
