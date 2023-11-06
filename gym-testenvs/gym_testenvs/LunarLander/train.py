@@ -496,7 +496,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
                 )
                 * self.wind_power
             )
-            self.wind_idx += np.random.uniform(0.5,1.5)
+            self.wind_idx += 1
             self.lander.ApplyForceToCenter(
                 (wind_mag, 0.0),
                 True,
@@ -508,7 +508,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
                 math.sin(0.02 * self.torque_idx)
                 + (math.sin(math.pi * 0.01 * self.torque_idx))
             ) * (self.turbulence_power)
-            self.torque_idx += np.random.uniform(0.5,1.5)
+            self.torque_idx += 1
             self.lander.ApplyTorque(
                 (torque_mag),
                 True,

@@ -14,7 +14,7 @@ n=2000
 
 env = gym.make('LunarLander/ordinary-v0',enable_wind=True,wind_power = 10.0,turbulence_power = 1.0)
 
-model = DQN.load("Rocket_agent_withwind/model/dqn_lunar.pkl")
+model = DQN.load("Rocket_agent_withwind/model/dqn_lunar_v0.pkl")
 
 def plot_mean(ys,xlabel,ylabel,legend,xlim,save_path=None):
     plt.plot(ys)
