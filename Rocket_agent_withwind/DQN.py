@@ -1,9 +1,10 @@
 import gymnasium as gym
+import gym_testenvs
 from stable_baselines3 import DQN
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.logger import configure
 
-env = gym.make('LunarLander-v2',enable_wind=True,wind_power = 10.0,turbulence_power = 1.0)
+env = gym.make('LunarLander/train-v0',enable_wind=True,wind_power = 10.0,turbulence_power = 1.0)
 model = DQN(policy = 'MlpPolicy',
             env=env,
             learning_rate =  6.3e-4,

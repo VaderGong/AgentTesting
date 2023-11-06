@@ -1,1 +1,2 @@
 from gym_testenvs.LunarLander.ordinary import LunarLander_ordinary
+from gym_testenvs.LunarLander.train import LunarLander_train

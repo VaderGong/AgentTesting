@@ -6,3 +6,10 @@ register(
     max_episode_steps=1000,
     reward_threshold=200,
 )
+
+register(
+    id="LunarLander/train-v0",
+    entry_point="gym_testenvs.LunarLander:LunarLander_train",
+    max_episode_steps=1000,
+    reward_threshold=200,
+)

@@ -74,7 +74,7 @@ class ContactDetector(contactListener):
                 self.env.legs[i].ground_contact = False
 
 
-class LunarLander_ordinary(gym.Env, EzPickle):
+class LunarLander_train(gym.Env, EzPickle):
     """
     ## Description
     This environment is a classic rocket trajectory optimization problem.
@@ -660,9 +660,9 @@ class LunarLander_ordinary(gym.Env, EzPickle):
         reward -= s_power * 0.03
 
         terminated = False
-        truncated = False
+
         if self.game_over or abs(state[0]) >= 1.0:
-            truncated = True
+            terminated = True
             reward = -100
         if not self.lander.awake:
             terminated = True
@@ -670,7 +670,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
 
         if self.render_mode == "human":
             self.render()
-        return np.array(state, dtype=np.float32), reward, terminated, truncated, {}
+        return np.array(state, dtype=np.float32), reward, terminated, False, {}
 
     def render(self):
         if self.render_mode is None:
