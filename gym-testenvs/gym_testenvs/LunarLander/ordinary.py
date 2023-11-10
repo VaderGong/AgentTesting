@@ -487,6 +487,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
         if self.enable_wind and not (
             self.legs[0].ground_contact or self.legs[1].ground_contact
         ):
+            idx=np.random.randint(0,17)
             # the function used for wind is tanh(sin(2 k x) + sin(pi k x)),
             # which is proven to never be periodic, k = 0.01
             wind_mag = (
@@ -496,7 +497,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
                 )
                 * self.wind_power
             )
-            self.wind_idx += np.random.uniform(0,10)
+            self.wind_idx += idx
             self.lander.ApplyForceToCenter(
                 (wind_mag, 0.0),
                 True,
@@ -508,7 +509,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
                 math.sin(0.02 * self.torque_idx)
                 + (math.sin(math.pi * 0.01 * self.torque_idx))
             ) * (self.turbulence_power)
-            self.torque_idx += np.random.uniform(0,10)
+            self.torque_idx += idx
             self.lander.ApplyTorque(
                 (torque_mag),
                 True,

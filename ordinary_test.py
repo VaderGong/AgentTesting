@@ -14,7 +14,7 @@ import tqdm
 
 n=100000
 
-env = gym.make('LunarLander/ordinary-v0',enable_wind=True,wind_power = 10.0,turbulence_power = 1.0)
+env = gym.make('LunarLander/ordinary-v0',gravity=-9,enable_wind=True,wind_power = 10.0,turbulence_power = 1.0)
 
 model = DQN.load("Rocket_agent_withwind/model/dqn_lunar_v0.pkl")
 
@@ -43,7 +43,7 @@ for i in tqdm.tqdm(range(n)):
 
 print(crashes)
 dict={'rewards':rewards,'crashes':crashes}
-with open('data/ordinary/ordinary.pkl','wb') as f:
+with open('data/ordinary/DQN/ordinary.pkl','wb') as f:
     pickle.dump(dict,f)
     f.close()
 
@@ -52,13 +52,13 @@ mean_crash,rhw_crash,var_crash=data_process.calculate(crashes)
 
 print(mean_crash)
 
-plot_mean(mean_reward,'Number of Episodes','Reward',['Ordinary method'],[0,100000],save_path='data/ordinary/reward/ordinary_mean.png')
-plot_mean(rhw_reward,'Number of Episodes','Relative Half Width',['Ordinary method'],[0,100000],save_path='data/ordinary/reward/ordinary_rhw.png')
-plot_mean(var_reward,'Number of Episodes','Variance',['Ordinary method'],[0,100000],save_path='data/ordinary/reward/ordinary_var.png')
+plot_mean(mean_reward,'Number of Episodes','Reward',['Ordinary method'],[0,n],save_path='data/ordinary/DQN/reward/ordinary_mean.png')
+plot_mean(rhw_reward,'Number of Episodes','Relative Half Width',['Ordinary method'],[0,n],save_path='data/ordinary/DQN/reward/ordinary_rhw.png')
+plot_mean(var_reward,'Number of Episodes','Variance',['Ordinary method'],[0,n],save_path='data/ordinary/DQN/reward/ordinary_var.png')
 
-plot_mean(mean_crash,'Number of Episodes','Crash Rate',['Ordinary method'],[0,100000],save_path='data/ordinary/crash/ordinary_mean.png')
-plot_mean(rhw_crash,'Number of Episodes','Relative Half Width',['Ordinary method'],[0,100000],save_path='data/ordinary/crash/ordinary_rhw.png')
-plot_mean(var_crash,'Number of Episodes','Variance',['Ordinary method'],[0,100000],save_path='data/ordinary/crash/ordinary_var.png')
+plot_mean(mean_crash,'Number of Episodes','Crash Rate',['Ordinary method'],[0,n],save_path='data/ordinary/DQN/crash/ordinary_mean.png')
+plot_mean(rhw_crash,'Number of Episodes','Relative Half Width',['Ordinary method'],[0,n],save_path='data/ordinary/DQN/crash/ordinary_rhw.png')
+plot_mean(var_crash,'Number of Episodes','Variance',['Ordinary method'],[0,n],save_path='data/ordinary/DQN/crash/ordinary_var.png')
 
 
     
