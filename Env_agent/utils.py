@@ -9,6 +9,8 @@ from sklearn import metrics
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
+import time
+
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, data_df):
         self.label = torch.from_numpy(data_df['label'].values)
@@ -90,4 +92,30 @@ class Config:
         label = list(set(list(label)))
         return file.columns[:-1], label
     
+class ENVModel:
+    def __init__(self, model, config):
+        self.model = model
+        self.config = config
+
+    def train(self):
+        dev_best_loss = float('inf')
+        start_time = time.time()
+        # 模型为训练模式
+        self.model.train()
+        optimizer = torch.optim.Adam(self.model.parameters(), lr=self.config.learning_rate)
+        
+        acc_list = [[], []]
+        loss_list = [[], []]
+        # 记录损失不下降的epoch数，防止过拟合，虽然估计本例多半会欠拟合【哭】
+        break_epoch = 0
+        for epoch in range(self.config.epoch):
+            # 训练模型
+            for i, (batch_data, batch_label) in enumerate(self.config.train_loader):
+                optimizer.zero_grad()
+                output = self.model(batch_data)
+                batch_label = batch_label.long()
+                loss = F.cross_entropy(output, batch_label)
+                loss.backward()
+                optimizer.step()
+                
 

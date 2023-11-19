@@ -37,4 +37,5 @@ class MLP(torch.nn.Module):
         hidden = self.dropout(hidden)
         output = self.output_layer(hidden)
         return output
+    
 
