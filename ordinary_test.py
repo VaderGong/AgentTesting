@@ -1,6 +1,6 @@
 import gymnasium as gym
 import gym_testenvs
-import utils.data_process as data_process
+import utils.process as process
 from utils.pics import plot_mean
 
 from stable_baselines3 import DQN,PPO
@@ -46,8 +46,8 @@ with open('data/ordinary/DQN/ordinary.pkl','wb') as f:
     pickle.dump(dict,f)
     f.close()
 
-mean_reward,rhw_reward,var_reward=data_process.calculate(rewards)
-mean_crash,rhw_crash,var_crash=data_process.calculate(crashes)
+mean_reward,rhw_reward,var_reward=process.calculate(rewards)
+mean_crash,rhw_crash,var_crash=process.calculate(crashes)
 
 print(mean_crash)
 

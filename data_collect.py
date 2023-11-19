@@ -1,6 +1,6 @@
 import gymnasium as gym
 import gym_testenvs
-import utils.data_process as data_process
+import utils.process as process
 from utils.pics import plot_mean
 
 from stable_baselines3 import DQN,PPO
@@ -27,7 +27,7 @@ model = DQN.load("Rocket_agent_withwind/model/dqn_lunar_v0.pkl",device='cpu')
 #     plot_mean(rhw,'Number of Episodes','Relative Half Width',['Ordinary method'],[0,1000],save_path='data/reward/ordinary_rhw.png')
 #     plot_mean(var,'Number of Episodes','Variance',['Ordinary method'],[0,1000],save_path='data/reward/ordinary_var.png')
 
-crash_num=0
+crash_num=256
 for i in tqdm.tqdm(range(n)):
     data_episode={'obs':[],'action':[],'wind_idx':[],'torque_idx':[],'wind_add':[],'torque_add':[],'reward':[],'crash':0}
     obs,_= env.reset()

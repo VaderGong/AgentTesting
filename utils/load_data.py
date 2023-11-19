@@ -1,7 +1,7 @@
 import pickle
 import matplotlib.pyplot as plt
 import numpy as np
-import utils.data_process as data_process
+import utils.process as process
 from utils.pics import plot_mean
 
 with open('data/ordinary/DQN/ordinary.pkl','rb') as f:
@@ -11,8 +11,8 @@ with open('data/ordinary/DQN/ordinary.pkl','rb') as f:
 rewards=dict['rewards']
 crashes=dict['crashes']
 
-mean_reward,rhw_reward,var_reward=data_process.calculate(rewards)
-mean_crash,rhw_crash,var_crash=data_process.calculate(crashes)
+mean_reward,rhw_reward,var_reward=process.calculate(rewards)
+mean_crash,rhw_crash,var_crash=process.calculate(crashes)
 
 n=len(rewards)
 plot_mean(mean_reward,'Number of Episodes','Reward',['Ordinary method'],[0,n],save_path='data/ordinary/DQN/reward/ordinary_mean.png')

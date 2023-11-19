@@ -264,8 +264,8 @@ class LunarLander_ordinary(gym.Env, EzPickle):
         self.turbulence_power = turbulence_power
 
         self.enable_wind = enable_wind
-        self.wind_idx = np.random.randint(-9999, 9999)
-        self.torque_idx = np.random.randint(-9999, 9999)
+        self.wind_idx = np.random.randint(-999, 999)
+        self.torque_idx = np.random.randint(-999, 999)
 
         self.screen: pygame.Surface = None
         self.clock = None
