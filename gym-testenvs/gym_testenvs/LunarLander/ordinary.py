@@ -355,7 +355,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
         H = VIEWPORT_H / SCALE
 
         # Create Terrain
-        CHUNKS = 11
+        CHUNKS = 5
         height = self.np_random.uniform(0, H / 2, size=(CHUNKS + 1,))
         chunk_x = [W / (CHUNKS - 1) * i for i in range(CHUNKS)]
         self.helipad_x1 = chunk_x[CHUNKS // 2 - 1]
@@ -408,7 +408,7 @@ class LunarLander_ordinary(gym.Env, EzPickle):
         self.lander.ApplyForceToCenter(
             (
                 self.np_random.uniform(-INITIAL_RANDOM, INITIAL_RANDOM),
-                self.np_random.uniform(-INITIAL_RANDOM, INITIAL_RANDOM),
+                self.np_random.uniform(-INITIAL_RANDOM/2, INITIAL_RANDOM/2),
             ),
             True,
         )
@@ -487,7 +487,6 @@ class LunarLander_ordinary(gym.Env, EzPickle):
         if self.enable_wind and not (
             self.legs[0].ground_contact or self.legs[1].ground_contact
         ):
-            idx=np.random.randint(0,17)
             # the function used for wind is tanh(sin(2 k x) + sin(pi k x)),
             # which is proven to never be periodic, k = 0.01
             wind_mag = (
@@ -497,7 +496,8 @@ class LunarLander_ordinary(gym.Env, EzPickle):
                 )
                 * self.wind_power
             )
-            self.wind_idx += idx
+            self.wind_add = np.random.randint(0,17)
+            self.wind_idx += self.wind_add
             self.lander.ApplyForceToCenter(
                 (wind_mag, 0.0),
                 True,
@@ -509,7 +509,8 @@ class LunarLander_ordinary(gym.Env, EzPickle):
                 math.sin(0.02 * self.torque_idx)
                 + (math.sin(math.pi * 0.01 * self.torque_idx))
             ) * (self.turbulence_power)
-            self.torque_idx += idx
+            self.torque_add = np.random.randint(0,17)
+            self.torque_idx += self.torque_add
             self.lander.ApplyTorque(
                 (torque_mag),
                 True,
