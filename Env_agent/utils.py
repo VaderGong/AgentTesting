@@ -62,7 +62,7 @@ class Config:
         self.if_nan(file)
         return file
 
-    # 切7:1:2 => 训练:验证:测试
+    # 切训练:验证:测试 7:1:2 
     def cut_data(self, data_df):
         try:
             train_df, test_dev_df = train_test_split(data_df, test_size=0.3, random_state=1129, stratify=data_df["label"])
@@ -85,7 +85,7 @@ class Config:
             print("Empty data exists")
             sys.exit(0)
 
-    # 混淆矩阵不一定有用，先放着
+    # 混淆矩阵不一定要用，先放着
     def get_class(self):
         file = self.read_file()
         label = file[file.columns[-1]]
@@ -100,22 +100,73 @@ class ENVModel:
     def train(self):
         dev_best_loss = float('inf')
         start_time = time.time()
-        # 模型为训练模式
-        self.model.train()
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.config.learning_rate)
-        
-        acc_list = [[], []]
-        loss_list = [[], []]
-        # 记录损失不下降的epoch数，防止过拟合，虽然估计本例多半会欠拟合【哭】
+        # 记录损失不下降的epoch数，防止过拟合
         break_epoch = 0
         for epoch in range(self.config.epoch):
+            # 模型为训练模式
+            self.model.train()
+            print('Epoch [{}/{}]'.format(epoch + 1, self.config.epoch))
             # 训练模型
             for i, (batch_data, batch_label) in enumerate(self.config.train_loader):
                 optimizer.zero_grad()
-                output = self.model(batch_data)
+                outputs = self.model(batch_data)
                 batch_label = batch_label.long()
-                loss = F.cross_entropy(output, batch_label)
+                loss = F.cross_entropy(outputs, batch_label)
                 loss.backward()
                 optimizer.step()
+            
+            true = batch_label.data.cpu()
+            # 预测类别
+            predict = torch.max(outputs.data, 1)[1].cpu()
+            # 计算训练准确率
+            train_acc = metrics.accuracy_score(true, predict)
+            # 验证模型
+            dev_acc, dev_loss = self.evaluate()
+            print('Train Loss: {:.6f}, Acc: {:.6f}'.format(loss.item(), train_acc))
+            print('Dev Loss: {:.6f}, Acc: {:.6f}'.format(dev_loss, dev_acc))
+            print("Time: {:.1f}s".format(time.time() - start_time))
+            # 如果验证损失下降，保存模型
+            if dev_loss < dev_best_loss:
+                dev_best_loss = dev_loss
+                torch.save(self.model.state_dict(), self.config.name)
+                print("Save model!")
+                break_epoch = 0
+            else:
+                break_epoch += 1
+            # 如果验证损失不下降，停止训练
+            if break_epoch >= 10:
+                print("Early stop!")
+                break
+
+    def test(self):
+        start_time = time.time()
+        test_acc, test_loss = self.evaluate(test=True)
+        print('Test Loss: {:.6f}, Acc: {:.6f}, Time: {:.1f}'.format(test_loss, test_acc, time.time() - start_time))
+
+    def evaluate(self,test=False):
+        self.model.eval()
+        loss_total = 0
+        predict_all = np.array([], dtype=int)
+        labels_all = np.array([], dtype=int)
+        loader=self.config.test_loader if test else self.config.dev_loader
+        with torch.no_grad():
+            for (dev, dev_label) in loader:
+                outputs = self.model(dev)
+                dev_label = dev_label.long()
+                loss = F.cross_entropy(outputs, dev_label)
+                loss_total += loss
+                dev_label = dev_label.data.cpu().numpy()
+                predict = torch.max(outputs.data, 1)[1].cpu().numpy()
+                labels_all = np.append(labels_all, dev_label)
+                predict_all = np.append(predict_all, predict)
+        acc = metrics.accuracy_score(labels_all, predict_all)
+        return acc, loss_total / len(loader)
+
+    def load(self):
+        self.model.load_state_dict(torch.load(self.config.name))
+        print("Load model!")
+
+
                 
 
